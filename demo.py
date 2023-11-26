@@ -1,4 +1,4 @@
-from ac.autocorrect import is_correct, get_similar
+from lesp.autocorrect import is_correct, get_similar
 
 def load_config():
     with open("demo_config", "r") as f:

@@ -50,6 +50,11 @@ def get_similar_worker(args):
 def get_similar(word, similarity_rate, chunks=4, upto=3):
     if upto < 1:
         raise ValueError("Can only return 1 or more similar words.")
+    if chunks < 1:
+        raise ValueError("Can only split into 1 or more chunks.")
+    if similarity_rate < 0 or similarity_rate > 1:
+        raise ValueError("Similarity rate must be between 0 and 1.")
+    
     word = word.lower()
     similar_words = []
     chunk_size = len(wordlist) // chunks
