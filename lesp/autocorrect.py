@@ -1,18 +1,28 @@
 import concurrent.futures
 
 def load_config():
-    with open("config", "r") as f:
-        config = f.read()
-    return config
+    try:
+        with open("config", "r") as f:
+            config = f.read()
+        return config
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Config File not found!")
 
 def load_wordlist():
-    with open(wordlistpath, "r") as f:
-        wordlist = f.read().split("\n")
-    return wordlist
+    try:
+        with open(wordlistpath, "r") as f:
+            wordlist = f.read().split("\n")
+        return wordlist
+    except FileNotFoundError:
+        raise FileNotFoundError(f"{wordlistpath} not found!")
 
-config = load_config()
-wordlistpath = config.split("wordlist=\"")[1].split("\"")[0]
-wordlist = load_wordlist()
+try:        
+    config = load_config()
+    wordlistpath = config.split("wordlist=\"")[1].split("\"")[0]
+    wordlist = load_wordlist()
+except FileNotFoundError as error:
+    print(error)
+    exit()
 
 def is_correct(word):
     if word in wordlist:

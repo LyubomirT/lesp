@@ -1,11 +1,18 @@
 from lesp.autocorrect import is_correct, get_similar
 
 def load_config():
-    with open("demo_config", "r") as f:
-        config = f.read()
-    return config
+    try:
+        with open("demo_config", "r") as f:
+            config = f.read()
+        return config
+    except FileNotFoundError:
+        raise FileNotFoundError("demo_config not found!")
 
-config = load_config()
+try:
+    config = load_config()
+except FileNotFoundError as error:
+    print(error)
+    exit()
 # showallsimilarities="True"
 showallsimilarities = config.split("showallsimilarities=\"")[1].split("\"")[0]
 
