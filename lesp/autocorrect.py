@@ -1,5 +1,4 @@
 import concurrent.futures
-# from os import exit
 
 def load_config():
     try:
