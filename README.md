@@ -181,3 +181,9 @@ Many thanks to the following Open-Source projects:
 
 - [Google 10000 English](https://github.com/first20hours/google-10000-english) - `small_wordlist.txt`
 - [English Word List](https://github.com/dwyl/english-words) - `wordlist.txt`
+
+## Our Amazing Contributors ✨
+
+Thanks to these awesome people for contributing! I appreciate your support a lot! ❤️
+
+![Contributors](https://contrib.rocks/image?repo=LyubomirT/lesp)
