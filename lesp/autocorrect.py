@@ -1,4 +1,5 @@
 import concurrent.futures
+import os
 
 def load_config():
     try:
@@ -84,3 +85,30 @@ def get_similar(word, similarity_rate, chunks=4, upto=3):
     else:
         # Return only upto similar words
         return similar_words[:upto]
+
+
+def backup(path="wordlist_backup"):
+    if os.path.isdir(path):
+        raise ValueError("Path specified is a directory!")
+    with open(path, "w") as f:
+        f.write("\n".join(wordlist))
+    
+
+def restore(overwritecurrent, path="wordlist_backup"):
+    if not os.path.isfile(path):
+        raise FileNotFoundError("Backup file not found!")
+    with open(path, "r") as f:
+        wordlist_ = f.read().split("\n")
+    global wordlist
+    wordlist = wordlist_
+    if overwritecurrent:
+        with open(wordlistpath, "w") as f:
+            f.write("\n".join(wordlist))
+
+def extend_wordlist(word):
+    wordlist.append(word)
+
+def remove_from_wordlist(word):
+    if word not in wordlist:
+        raise ValueError(f"\"{word}\" not in wordlist!")
+    wordlist.remove(word)

@@ -120,6 +120,56 @@ print(score)
 
 The function will return a float between 0 and 1, where 0 means that the words are completely different, and 1 means that the words are exactly the same.
 
+### Backup
+
+If you're concerned about losing your wordlist, you can use the `backup` function to backup your wordlist. It will create a file in the path you specify, and it will write the wordlist in it. Note that the file will be overwritten if it already exists. Here's an example:
+
+```python
+from lesp import backup
+
+backup("my_wordlist_backup.txt") # Leave empty to use default path
+```
+
+### Restore
+
+If you've backed up your wordlist, you can restore it using the `restore` function. It will read the file you specify and it will overwrite the current wordlist with the one in the file. Note that the file must exist, otherwise the function will raise a `FileNotFoundError`. Here's an example:
+
+```python
+from lesp import restore
+
+restore(True, "my_wordlist_backup.txt") # Leave empty to use default path
+```
+
+True here stands for `overridecurrent`, which lets you choose whether you want the wordlist file to be overwritten or not. If you set it to `False`, then the function will leave your current wordlist file untouched, and will just modify the wordlist variable in the current session. If you set it to `True`, then the function will overwrite the wordlist file with the one in the backup file along with the wordlist variable in the current session.
+
+### Extend wordlist
+
+This is useful if the user usually writes about a specific, non-general topic. For example, if the user is a programmer, you can extend the wordlist with programming-related words if one is not found in the wordlist already. Here's an example:
+
+```python
+from lesp import is_correct, extend_wordlist, backup, get_similar
+
+if not is_correct("reactjs") and get_similar("reactjs") is None:
+    confirm = input("reactjs is not in the wordlist. Would you like to add it? (y/n) ")
+    if confirm.lower() == "y":
+        backup()
+        extend_wordlist("reactjs")
+        print("reactjs added to wordlist.")
+    else:
+        pass
+```
+
+### Remove from wordlist
+
+An opposite of the `extend_wordlist` function, this function removes a word from the wordlist. Note that this function will raise a `ValueError` if the word is not in the wordlist. Also note that this function will not remove the word from the wordlist permanently, it will only remove it for the current session. Here's an example:
+
+```python
+from lesp import remove_from_wordlist
+
+word = "reactjs"
+remove_from_wordlist(word)
+```
+
 ## Examples 📝
 
 If you're still not sure where to use LESP, you can check out the `examples` folder. It contains some examples of how you can use LESP in your projects. These examples are pretty simple, but they should give you an idea of how you can use LESP in your projects.
