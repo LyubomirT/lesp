@@ -47,7 +47,10 @@ def get_similar_worker(args):
             similar_words.append(w)
     return similar_words
 
-def get_similar(word, similarity_rate, chunks=4):
+def get_similar(word, similarity_rate, chunks=4, upto=3):
+    if upto < 1:
+        raise ValueError("Can only return 1 or more similar words.")
+    word = word.lower()
     similar_words = []
     chunk_size = len(wordlist) // chunks
 
@@ -59,7 +62,10 @@ def get_similar(word, similarity_rate, chunks=4):
     for similar_word_list in results:
         similar_words.extend(similar_word_list)
 
-    if similar_words:
-        return similar_words
-    else:
+    similar_words = list(set(similar_words))
+
+    if len(similar_words) == 0:
         return None
+    else:
+        # Return only upto similar words
+        return similar_words[:upto]

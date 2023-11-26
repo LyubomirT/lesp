@@ -7,7 +7,7 @@ def demo():
             print("Correct!")
         else:
             print("Incorrect!")
-            similar = get_similar(word, 0.7, chunks=500)
+            similar = get_similar(word, 0.7, chunks=20, upto=5)
             if similar == None:
                 print("No similar words found.")
             else:
