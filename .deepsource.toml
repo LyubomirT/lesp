@@ -1,0 +1,18 @@
+version = 1
+
+exclude_patterns = [
+  "config",
+  "demo_config",
+  ".gitignore",
+  "LICENSE",
+  "README.md",
+  "CONTRIBUTING.md",
+  "small_wordlist.txt",
+  "wordlist.txt"
+]
+
+[[analyzers]]
+name = "python"
+
+  [analyzers.meta]
+  runtime_version = "3.x.x"
