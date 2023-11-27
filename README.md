@@ -218,7 +218,7 @@ You can contact me on Discord either in my [Discord Server](https://discord.gg/X
 
 - [ ] Optimize even further
 - [ ] Add more examples
-- [ ] Improve documentation
+- [x] Improve documentation
 - [ ] Add support for compounds
 
 ## License 📜
