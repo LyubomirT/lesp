@@ -13,6 +13,8 @@ def load_wordlist():
     try:
         with open(wordlistpath, "r") as f:
             wordlist = f.read().split("\n")
+        if not all(word.isalpha() for word in wordlist):
+            raise ValueError("Invalid wordlist format. Words must contain only alphabetic characters.")
         return wordlist
     except FileNotFoundError:
         raise FileNotFoundError(f"{wordlistpath} not found!")
@@ -95,15 +97,24 @@ def backup(path="wordlist_backup"):
     
 
 def restore(overwritecurrent, path="wordlist_backup"):
-    if not os.path.isfile(path):
-        raise FileNotFoundError("Backup file not found!")
-    with open(path, "r") as f:
-        wordlist_ = f.read().split("\n")
-    global wordlist
-    wordlist = wordlist_
-    if overwritecurrent:
-        with open(wordlistpath, "w") as f:
-            f.write("\n".join(wordlist))
+    try:
+        if not os.path.isfile(path):
+            raise FileNotFoundError("Backup file not found!")
+        
+        with open(path, "r") as f:
+            wordlist_ = f.read().split("\n")
+        
+        if not all(word.isalpha() for word in wordlist_):
+            raise ValueError("Invalid backup file format. Words must contain only alphabetic characters.")
+
+        global wordlist
+        wordlist = wordlist_
+
+        if overwritecurrent:
+            with open(wordlistpath, "w") as f:
+                f.write("\n".join(wordlist))
+    except Exception as e:
+        raise ValueError(f"Error during restore: {str(e)}")
 
 def extend_wordlist(word):
     wordlist.append(word)
