@@ -159,6 +159,16 @@ if not is_correct("reactjs") and get_similar("reactjs") is None:
         pass
 ```
 
+You can also extend the wordlist with multiple words at once by passing a list or a tuple to the function. Like this:
+
+```python
+from lesp import extend_wordlist
+
+words = ["reactjs", "vuejs", "angularjs"]
+
+extend_wordlist(words)
+```
+
 ### Remove from wordlist
 
 An opposite of the `extend_wordlist` function, this function removes a word from the wordlist. Note that this function will raise a `ValueError` if the word is not in the wordlist. Also note that this function will not remove the word from the wordlist permanently, it will only remove it for the current session. Here's an example:
