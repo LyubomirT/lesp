@@ -117,9 +117,29 @@ def restore(overwritecurrent, path="wordlist_backup"):
         raise ValueError(f"Error during restore: {str(e)}")
 
 def extend_wordlist(word):
+    if isinstance(word, str):
+        # If a single word is provided, add it to the wordlist
+        if word.isalpha():
+            wordlist.append(word)
+        else:
+            raise ValueError(f"Invalid input: '{word}' is not a valid word.")
+    elif isinstance(word, (list, tuple)):
+        # If a list or tuple is provided, extend the wordlist with its elements
+        for w in word:
+            if isinstance(w, str) and w.isalpha():
+                wordlist.append(w)
+            else:
+                raise ValueError(f"Invalid input: '{word}' is not a valid word.")
+    else:
+        # Handle other types if needed
+        raise TypeError("Invalid input type. Please provide a string, list, or tuple of alphabetic words.")
+
+    return wordlist
+
     wordlist.append(word)
 
 def remove_from_wordlist(word):
     if word not in wordlist:
         raise ValueError(f"\"{word}\" not in wordlist!")
     wordlist.remove(word)
+
