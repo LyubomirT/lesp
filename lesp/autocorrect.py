@@ -119,13 +119,13 @@ def restore(overwritecurrent, path="wordlist_backup"):
 def extend_wordlist(word):
     if isinstance(word, str):
         if word.isalpha():
-            wordlist.append(word)
+            wordlist.append(word.lower())
         else:
             raise ValueError(f"Invalid input: '{word}' is not a valid word.")
     elif isinstance(word, (list, tuple)):
         for w in word:
             if isinstance(w, str) and w.isalpha():
-                wordlist.append(w)
+                wordlist.append(w.lower())
             else:
                 raise ValueError(f"Invalid input: '{word}' is not a valid word.")
     else:
