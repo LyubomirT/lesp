@@ -102,7 +102,7 @@ In the code above, we're getting similar words to `apgle` with a similarity rate
 
 A similarity rate of `0.5` means that the words returned will be at least 50% similar to the word we're checking. The higher the similarity rate, the more precise the results will be, but generally there will be less words. Myself I would recommend to keep the similarity rate at `0.5`, but you can experiment with it and see what works best for you.
 
-The `chunks` argument specifies how many chunks the wordlist will be split into. This is useful if you have a large wordlist and you want to speed up the process. The higher the number, the faster the process will be, but the more memory/CPU it will consume. For example, when trying to scan `wordlist.txt` with 500 chunks, the process takes about 0.5 seconds on my machine, but it consumes about 1.5 GB of RAM and 44% of one of the CPU cores. If you have a large wordlist.
+The `chunks` argument specifies how many chunks the wordlist will be split into. This is useful if you have a large wordlist and you want to speed up the process. The higher the number, the faster the process will be, but the more memory/CPU it will consume. For example, when trying to scan `wordlist.txt` with 1500 chunks, the process takes about 0.5 seconds on my machine, but it consumes about 1.5 GB of RAM and 44% of one of the CPU cores. If you have a large wordlist.
 
 The `upto` argument specifies how many similar words will be returned. If you set it to `3`, then the function will return up to 3 similar words. If you set it to `1`, then it will return up to 1 similar word. But, whatever amount you select, the output will still be a list. If you set it to `0`, then the function will raise a `ValueError`.
 
