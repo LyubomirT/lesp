@@ -136,3 +136,55 @@ def remove_from_wordlist(word):
         raise ValueError(f"\"{word}\" not in wordlist!")
     wordlist.remove(word)
 
+
+def stack(source, destination):
+    try:
+        with open(source, "r") as f:
+            source_words = f.read().split("\n")
+        with open(destination, "r") as f:
+            destination_words = f.read().split("\n")
+
+        if any(len(word.split()) > 1 for word in source_words):
+            raise ValueError("Invalid source file format. Each word must be on a separate line.")
+        if any(len(word.split()) > 1 for word in destination_words):
+            raise ValueError("Invalid destination file format. Each word must be on a separate line.")
+
+        if not all(word.isalpha() for word in source_words):
+            raise ValueError("Invalid source file format. Words must contain only alphabetic characters.")
+        if not all(word.isalpha() for word in destination_words):
+            raise ValueError("Invalid destination file format. Words must contain only alphabetic characters.")
+
+        destination_words.extend(source_words)
+
+        with open(destination, "w") as f:
+            f.write("\n".join(destination_words))
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"File not found: {str(e)}")
+    except Exception as e:
+        raise ValueError(f"Error during stacking: {str(e)}")
+
+def merge_delete(source, destination):
+    try:
+        with open(source, "r") as f:
+            source_words = f.read().split("\n")
+        with open(destination, "r") as f:
+            destination_words = f.read().split("\n")
+
+        if any(len(word.split()) > 1 for word in source_words):
+            raise ValueError("Invalid source file format. Each word must be on a separate line.")
+        if any(len(word.split()) > 1 for word in destination_words):
+            raise ValueError("Invalid destination file format. Each word must be on a separate line.")
+
+        if not all(word.isalpha() for word in source_words):
+            raise ValueError("Invalid source file format. Words must contain only alphabetic characters.")
+        if not all(word.isalpha() for word in destination_words):
+            raise ValueError("Invalid destination file format. Words must contain only alphabetic characters.")
+
+        destination_words = list(set(destination_words) - set(source_words))
+
+        with open(destination, "w") as f:
+            f.write("\n".join(destination_words))
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"File not found: {str(e)}")
+    except Exception as e:
+        raise ValueError(f"Error during merge delete: {str(e)}")
