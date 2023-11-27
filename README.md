@@ -219,7 +219,7 @@ You can contact me on Discord either in my [Discord Server](https://discord.gg/X
 - [ ] Optimize even further
 - [ ] Add more examples
 - [x] Improve documentation
-- [ ] Add support for compounds
+- [ ] Add support for conjugations
 
 ## License 📜
 
