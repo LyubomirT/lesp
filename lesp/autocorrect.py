@@ -28,10 +28,7 @@ except FileNotFoundError as error:
     exit()
 
 def is_correct(word):
-    if word in wordlist:
-        return True
-    else:
-        return False
+    return word in wordlist
 
 def get_similarity_score(word1, word2):
     len1 = len(word1)
