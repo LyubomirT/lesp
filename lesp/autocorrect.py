@@ -132,9 +132,25 @@ def extend_wordlist(word):
         raise TypeError("Invalid input type. Please provide a string, list, or tuple of alphabetic words.")
 
 def remove_from_wordlist(word):
-    if word not in wordlist:
-        raise ValueError(f"\"{word}\" not in wordlist!")
-    wordlist.remove(word)
+    if isinstance(word, str):
+        if word.isalpha():
+            if word in wordlist:
+                wordlist.remove(word)
+            else:
+                raise ValueError(f"\"{word}\" not in wordlist!")
+        else:
+            raise ValueError(f"Invalid input: '{word}' is not a valid word.")
+    elif isinstance(word, (list, tuple)):
+        for w in word:
+            if isinstance(w, str) and w.isalpha():
+                if w in wordlist:
+                    wordlist.remove(w)
+                else:
+                    raise ValueError(f"\"{w}\" not in wordlist!")
+            else:
+                raise ValueError(f"Invalid input: '{word}' is not a valid word.")
+    else:
+        raise TypeError("Invalid input type. Please provide a string, list, or tuple of alphabetic words.")
 
 
 def stack(source, destination):
