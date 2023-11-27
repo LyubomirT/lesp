@@ -196,10 +196,14 @@ def merge_delete(source, destination):
         if not all(word.isalpha() for word in destination_words):
             raise ValueError("Invalid destination file format. Words must contain only alphabetic characters.")
 
-        destination_words = list(set(destination_words) - set(source_words))
+        destination_words_ = list(set(destination_words) - set(source_words))
+
+        # All other words in the source file that are not in the destination file will be added to the destination file
+
+        destination_words_ += [word for word in source_words if word not in destination_words]
 
         with open(destination, "w") as f:
-            f.write("\n".join(destination_words))
+            f.write("\n".join(destination_words_))
     except FileNotFoundError as e:
         raise FileNotFoundError(f"File not found: {str(e)}")
     except Exception as e:

@@ -180,6 +180,62 @@ word = "reactjs"
 remove_from_wordlist(word)
 ```
 
+If you want to remove multiple words at once, you can pass a list or a tuple to the function. Like this:
+
+```python
+from lesp import remove_from_wordlist
+
+words = ["reactjs", "vuejs", "angularjs"]
+
+remove_from_wordlist(words)
+```
+
+### Stacking
+
+This function lets you stack two wordlist files together, so you can have a bigger wordlist out of two combined. The function will take two arguments, the source file and the destination file. The source file is the file that will be stacked on top of the destination file. Here's an example:
+
+```python
+from lesp import stack
+
+stack("wordlist.txt", "my_wordlist.txt")
+```
+
+### Merge delete
+
+This function lets you delete all words from the destination file that are in the source file. For example, if you have a wordlist with the following words:
+
+```
+apple
+banana
+orange
+```
+
+And you have another wordlist with the following words:
+
+```
+apple
+banana
+raspberry
+```
+
+Then, if you use the `merge_delete` function, the destination file will be modified to look like this:
+
+```
+orange
+raspberry
+```
+
+Here's an example of how you can use it:
+
+```python
+from lesp import merge_delete
+
+merge_delete("wordlist.txt", "my_wordlist.txt")
+
+with open("my_wordlist.txt", "r") as f:
+    print(f.read())
+```
+
 ## Examples 📝
 
 If you're still not sure where to use LESP, you can check out the `examples` folder. It contains some examples of how you can use LESP in your projects. These examples are pretty simple, but they should give you an idea of how you can use LESP in your projects.
