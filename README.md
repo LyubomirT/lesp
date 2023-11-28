@@ -302,3 +302,5 @@ Many thanks to the following Open-Source projects:
 Thanks to these awesome people for contributing! I appreciate your support a lot! ❤️
 
 [![Contributors](https://contrib.rocks/image?repo=lyubomirt/lesp)](https://github.com/lyubomirt/lesp/graphs/contributors)
+
+(Note that due to a glitch, some contributors may not appear in the grid)
