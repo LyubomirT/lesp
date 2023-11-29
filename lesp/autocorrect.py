@@ -9,7 +9,11 @@ class Proofreader:
     def load_wordlist(self):
         try:
             with open(self.wordlist_path, "r") as f:
-                self.wordlist = f.read().split("\n")
+                self.wordlist = f.read().strip().split("\n")
+                # Remove duplicate words in the wordlist
+                self.wordlist = list(set(self.wordlist))
+                # Remove leading and trailing whitespaces from each word
+                self.wordlist = [word.strip() for word in self.wordlist]
             if not all(word.isalpha() for word in self.wordlist):
                 raise ValueError("Invalid wordlist format. Words must contain only alphabetic characters.")
         except FileNotFoundError:
