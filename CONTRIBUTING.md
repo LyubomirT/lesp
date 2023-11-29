@@ -12,6 +12,7 @@ Welcome! We're thrilled that you are interested in contributing to LESP. Before 
   - [Create a Branch](#create-a-branch)
 - [Making Changes](#making-changes)
   - [Coding Standards](#coding-standards)
+  - [AI-Generated Code](#ai-generated-code)
   - [Commit Messages](#commit-messages)
 - [Testing](#testing)
 - [Pull Request Process](#pull-request-process)
@@ -49,6 +50,10 @@ git checkout -b feature-branch
 ### Coding Standards
 
 Please follow the existing coding standards used in the project. This includes code formatting, naming conventions, and commenting.
+
+### AI-Generated Code
+
+While using AI to assist you while programming is okay, Pull Requests with the whole change made by AI will probably be rejected. Please use AI to assist you, not to do the whole work for you. If the Pull Request is made by AI, please add a comment that you used AI to assist you.
 
 ### Commit Messages
 
