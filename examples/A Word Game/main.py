@@ -1,4 +1,4 @@
-from lesp import get_similar
+from lesp.autocorrect import Proofreader
 import random
 
 # A list of words to choose from
@@ -7,8 +7,11 @@ words = ["apple", "banana", "orange", "grape", "melon", "cherry", "lemon", "lime
 # Pick a random word
 word = random.choice(words)
 
+# Create an instance of the Proofreader class
+proofreader = Proofreader()
+
 # Get three similar words with a similarity rate of 0.4
-similar_words = get_similar(word, similarity_rate=0.4, upto=3)
+similar_words = proofreader.get_similar(word, similarity_rate=0.4, upto=3)
 
 # Add the original word to the list
 similar_words.append(word)

@@ -1,4 +1,4 @@
-from lesp.autocorrect import is_correct, get_similar
+from lesp.autocorrect import Proofreader
 
 def load_config():
     try:
@@ -13,18 +13,22 @@ try:
 except FileNotFoundError as error:
     print(error)
     exit()
+
 # showallsimilarities="True"
 showallsimilarities = config.split("showallsimilarities=\"")[1].split("\"")[0]
 
 def demo():
+    wordlist_path = "small_wordlist.txt"  # Update with the actual path to your small_wordlist.txt
+    proofreader = Proofreader(wordlist_path)
+
     while True:
         word = input("Enter a word: ")
-        if is_correct(word):
+        if proofreader.is_correct(word):
             print("Correct!")
         else:
             print("Incorrect!")
-            similar = get_similar(word, 0.5, chunks=20, upto=5)
-            if similar == None:
+            similar = proofreader.get_similar(word, 0.5, chunks=20, upto=5)
+            if similar is None:
                 print("No similar words found.")
             elif showallsimilarities == "True":
                 print("Did you mean any of the following?")

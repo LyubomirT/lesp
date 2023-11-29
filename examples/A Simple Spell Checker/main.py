@@ -1,4 +1,7 @@
-from lesp import is_correct, get_similar
+from lesp.autocorrect import Proofreader
+
+# Create an instance of the Proofreader class
+proofreader = Proofreader()
 
 # Read a text file and check for spelling errors
 with open("text.txt", "r") as f:
@@ -12,8 +15,8 @@ for word in words:
     # Remove punctuation and make lowercase
     word = word.strip(".,").lower()
     # Check if the word is correct
-    if not is_correct(word):
+    if not proofreader.is_correct(word):
         # Get a suggestion for the word
-        suggestion = get_similar(word, similarity_rate=0.5, upto=1)
+        suggestion = proofreader.get_similar(word, similarity_rate=0.5, upto=1)
         # Print the word and the suggestion
-        print(f"{word} -> {suggestion}")
+        print(f"{word} -> {', '.join(suggestion)}" if suggestion else f"{word} -> No suggestions")

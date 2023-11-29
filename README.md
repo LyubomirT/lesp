@@ -31,6 +31,8 @@ LESP is a lightweight, efficient spelling proofreader written in Python. It's de
 
 Simply clone the repository and run the `demo.py` file to check it out. You don't need to install any additional libraries, so this is like plug-and-play. Just note that anything below Python 3.2 won't run this since old versions don't support `concurrent.futures`, which is used to speed up the process.
 
+PyPi package coming soon, so stay tuned for a more convenient way to install LESP!
+
 ### Detailed installation instructions
 
 1. Clone the repository
@@ -53,26 +55,29 @@ python demo.py
 
 ## Usage 📖
 
-LESP is pretty easy to setup, and basic configuration are already pre-built. You can find them in `config` and `demo_config` (these are files, not folders!) and you can edit them to your liking. Note that these files are **required** for the program to run, so don't delete, move, or rename them.
+LESP is pretty easy to setup, and basic demo configuration is already pre-built. You can find it in `demo_config` (this is a file, not a folder!) and you can edit it to your liking. Note that the file is **required** for the demo to run, so don't delete, move, or rename it. Not required for installing it with `pip` though (coming soon).
 
 ### Basic usage
 
-To use LESP, you need to import `is_correct` and `get_similar` from the `lesp` module. Then, you can use them like this:
+To use LESP, you need to import the `Proofreader` class from the `lesp` module. The class has a decent amount of functions, but the most important ones are `is_correct` and `get_similar`. Here's an example:
 
 ```python
-from lesp import is_correct, get_similar
+from lesp.autocorrect import Proofreader
 
-clearlynotcorrect = is_correct("apgle") # False
+proofreader = Proofreader(wordlist="my_wordlist.txt")
+clearlynotcorrect = proofreader.is_correct("apgle") # False
 
 if not clearlynotcorrect:
-    print("Did you mean: " + get_similar("apgle")) # Did you mean: apple
+    print("Did you mean: " + proofreader.get_similar("apgle")) # Did you mean: apple
 ```
 
 Simple as that!
 
 ### Advanced usage
 
-You can use a different wordlist by specifying it in the `config` file. Just note that the wordlist must be a `.txt` file, and it must be in the same folder as the file you want to run.
+By default, `Proofreader` will use the `lesp-wordlist.txt` file as the wordlist.
+
+You can use a different wordlist by specifying the path to it in the `wordlist` argument, when initializing the `Proofreader` class.
 
 A wordlist must be structured with each word on a new line, like this:
 
@@ -82,18 +87,22 @@ banana
 orange
 ```
 
-After you've done with putting a good wordlist in the directory, specify it in the `config` file like this:
+When finished with writing your wordlist, save it as a `.txt` file. Then, you can use it like this:
 
-```
-wordlist="my_wordlist.txt"
+```python
+from lesp.autocorrect import Proofreader
+
+proofreader = Proofreader(wordlist="my_wordlist.txt")
 ```
 
 You can customize the process of getting similar words as well. Configuration will be provided as arguments to the `get_similar` function. Here's an example:
 
 ```python
-from lesp import get_similar
+from lesp.autocorrect import Proofreader
 
-similar_words = get_similar("apgle", similarity_rate=0.5, chunks=4, upto=3)
+proofreader = Proofreader(wordlist="my_wordlist.txt")
+
+similar_words = proofreader.get_similar("apgle", similarity_rate=0.5, chunks=4, upto=3)
 
 print(similar_words)
 ```
@@ -108,12 +117,14 @@ The `upto` argument specifies how many similar words will be returned. If you se
 
 ### Get similarity score
 
-Even if this function isn't really supposed to be a feature, you can still use it if you want to. It's pretty simple to use, just import `get_similarity_score` from the `lesp` module and use it like this:
+Even if this function isn't really supposed to be a feature, you can still use it if you want to. It's pretty simple to use, just use the `get_similarity_score` function of the `Proofreader` class and pass the two words you want to compare as arguments. Here's an example:
 
 ```python
-from lesp import get_similarity_score
+from lesp.autocorrect import Proofreader
 
-score = get_similarity_score("apple", "apgle") # 0.8
+proofreader = Proofreader(wordlist="my_wordlist.txt")
+
+score = proofreader.get_similarity_score("apple", "apgle") # 0.8
 
 print(score)
 ```
@@ -125,9 +136,11 @@ The function will return a float between 0 and 1, where 0 means that the words a
 If you're concerned about losing your wordlist, you can use the `backup` function to backup your wordlist. It will create a file in the path you specify, and it will write the wordlist in it. Note that the file will be overwritten if it already exists. Here's an example:
 
 ```python
-from lesp import backup
+from lesp.autocorrect import Proofreader
 
-backup("my_wordlist_backup.txt") # Leave empty to use default path
+proofreader = Proofreader(wordlist="my_wordlist.txt")
+
+proofreader.backup("my_wordlist_backup.txt") # Leave empty to use default path
 ```
 
 ### Restore
@@ -135,9 +148,11 @@ backup("my_wordlist_backup.txt") # Leave empty to use default path
 If you've backed up your wordlist, you can restore it using the `restore` function. It will read the file you specify and it will overwrite the current wordlist with the one in the file. Note that the file must exist, otherwise the function will raise a `FileNotFoundError`. Here's an example:
 
 ```python
-from lesp import restore
+from lesp.autocorrect import Proofreader
 
-restore(True, "my_wordlist_backup.txt") # Leave empty to use default path
+proofreader = Proofreader(wordlist="my_wordlist.txt")
+
+proofreader.restore(True, "my_wordlist_backup.txt") # Leave empty to use default path
 ```
 
 True here stands for `overridecurrent`, which lets you choose whether you want the wordlist file to be overwritten or not. If you set it to `False`, then the function will leave your current wordlist file untouched, and will just modify the wordlist variable in the current session. If you set it to `True`, then the function will overwrite the wordlist file with the one in the backup file along with the wordlist variable in the current session.
@@ -147,13 +162,15 @@ True here stands for `overridecurrent`, which lets you choose whether you want t
 This is useful if the user usually writes about a specific, non-general topic. For example, if the user is a programmer, you can extend the wordlist with programming-related words if one is not found in the wordlist already. Here's an example:
 
 ```python
-from lesp import is_correct, extend_wordlist, backup, get_similar
+from lesp.autocorrect import Proofreader
 
-if not is_correct("reactjs") and get_similar("reactjs") is None:
+proofreader = Proofreader(wordlist="my_wordlist.txt")
+
+if not proofreader.is_correct("reactjs") and proofreader.get_similar("reactjs") is None:
     confirm = input("reactjs is not in the wordlist. Would you like to add it? (y/n) ")
     if confirm.lower() == "y":
-        backup()
-        extend_wordlist("reactjs")
+        proofreader.backup()
+        proofreader.extend_wordlist("reactjs")
         print("reactjs added to wordlist.")
     else:
         pass
@@ -162,11 +179,13 @@ if not is_correct("reactjs") and get_similar("reactjs") is None:
 You can also extend the wordlist with multiple words at once by passing a list or a tuple to the function. Like this:
 
 ```python
-from lesp import extend_wordlist
+from lesp.autocorrect import Proofreader
+
+proofreader = Proofreader(wordlist="my_wordlist.txt")
 
 words = ["reactjs", "vuejs", "angularjs"]
 
-extend_wordlist(words)
+proofreader.extend_wordlist(words)
 ```
 
 ### Remove from wordlist
@@ -174,20 +193,24 @@ extend_wordlist(words)
 An opposite of the `extend_wordlist` function, this function removes a word from the wordlist. Note that this function will raise a `ValueError` if the word is not in the wordlist. Also note that this function will not remove the word from the wordlist permanently, it will only remove it for the current session. Here's an example:
 
 ```python
-from lesp import remove_from_wordlist
+from lesp.autocorrect import Proofreader
+
+proofreader = Proofreader(wordlist="my_wordlist.txt")
 
 word = "reactjs"
-remove_from_wordlist(word)
+proofreader.remove_from_wordlist(word)
 ```
 
 If you want to remove multiple words at once, you can pass a list or a tuple to the function. Like this:
 
 ```python
-from lesp import remove_from_wordlist
+from lesp.autocorrect import Proofreader
+
+proofreader = Proofreader(wordlist="my_wordlist.txt")
 
 words = ["reactjs", "vuejs", "angularjs"]
 
-remove_from_wordlist(words)
+proofreader.remove_from_wordlist(words)
 ```
 
 ### Stacking
@@ -195,9 +218,9 @@ remove_from_wordlist(words)
 This function lets you stack two wordlist files together, so you can have a bigger wordlist out of two combined. The function will take two arguments, the source file and the destination file. The source file is the file that will be stacked on top of the destination file. Here's an example:
 
 ```python
-from lesp import stack
+from lesp.autocorrect import Proofreader
 
-stack("wordlist.txt", "my_wordlist.txt")
+proofreader.stack("wordlist.txt", "my_wordlist.txt")
 ```
 
 ### Merge delete
@@ -228,9 +251,11 @@ raspberry
 Here's an example of how you can use it:
 
 ```python
-from lesp import merge_delete
+from lesp.autocorrect import Proofreader
 
-merge_delete("wordlist.txt", "my_wordlist.txt")
+proofreader = Proofreader(wordlist="my_wordlist.txt")
+
+proofreader.merge_delete("wordlist.txt", "my_wordlist.txt")
 
 with open("my_wordlist.txt", "r") as f:
     print(f.read())
@@ -239,6 +264,10 @@ with open("my_wordlist.txt", "r") as f:
 ## Examples 📝
 
 If you're still not sure where to use LESP, you can check out the `examples` folder. It contains some examples of how you can use LESP in your projects. These examples are pretty simple, but they should give you an idea of how you can use LESP in your projects.
+
+### How to run an example?
+
+Simply open the folder of the example you want to run, then copy the `main.py` file to the root of the directory (same as `demo.py`, for instance). After that, run the `main.py` file and voila! The application is running!
 
 ## Contributing 🤝
 
@@ -283,8 +312,8 @@ You can contact me on Discord either in my [Discord Server](https://discord.gg/X
 ## Future plans 📅
 
 - [ ] Optimize even further
-- [ ] Add more examples
-- [ ] Improve documentation
+- [x] Add more examples
+- [x] Improve documentation
 
 ## License 📜
 

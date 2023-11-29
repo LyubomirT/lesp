@@ -1,6 +1,9 @@
-#from lesp import is_correct
-from lesp.autocorrect import is_correct, get_similar
+#from lesp import Proofreader
+from lesp.autocorrect import Proofreader
 import random
+
+# Initialize the Proofreader instance
+proofreader = Proofreader()
 
 # Load words from wordlist file
 with open("wordlist.txt", "r") as f:
@@ -15,7 +18,7 @@ print("Unscramble this word:", scrambled)
 guess = input("Your guess: ")
 
 # Check if guess is correct
-if guess.lower() == word:
+if proofreader.is_correct(guess):
     print("Correct!")
 else:
     print(f"Incorrect. The correct word was '{word}'.")
