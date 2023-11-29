@@ -13,6 +13,8 @@ def load_wordlist():
     try:
         with open(wordlistpath, "r") as f:
             wordlist = f.read().split("\n")
+        if not all(word.isalpha() for word in wordlist):
+            raise ValueError("Invalid wordlist format. Words must contain only alphabetic characters.")
         return wordlist
     except FileNotFoundError:
         raise FileNotFoundError(f"{wordlistpath} not found!")
@@ -26,10 +28,7 @@ except FileNotFoundError as error:
     exit()
 
 def is_correct(word):
-    if word in wordlist:
-        return True
-    else:
-        return False
+    return word in wordlist
 
 def get_similarity_score(word1, word2):
     len1 = len(word1)
@@ -95,20 +94,114 @@ def backup(path="wordlist_backup"):
     
 
 def restore(overwritecurrent, path="wordlist_backup"):
-    if not os.path.isfile(path):
-        raise FileNotFoundError("Backup file not found!")
-    with open(path, "r") as f:
-        wordlist_ = f.read().split("\n")
-    global wordlist
-    wordlist = wordlist_
-    if overwritecurrent:
-        with open(wordlistpath, "w") as f:
-            f.write("\n".join(wordlist))
+    try:
+        if not os.path.isfile(path):
+            raise FileNotFoundError("Backup file not found!")
+        
+        with open(path, "r") as f:
+            wordlist_ = f.read().split("\n")
+        
+        if not all(word.isalpha() for word in wordlist_):
+            raise ValueError("Invalid backup file format. Words must contain only alphabetic characters.")
+
+        global wordlist
+        wordlist = wordlist_
+
+        if overwritecurrent:
+            with open(wordlistpath, "w") as f:
+                f.write("\n".join(wordlist))
+    except Exception as e:
+        raise ValueError(f"Error during restore: {str(e)}")
 
 def extend_wordlist(word):
-    wordlist.append(word)
+    if isinstance(word, str):
+        if word.isalpha():
+            wordlist.append(word.lower())
+        else:
+            raise ValueError(f"Invalid input: '{word}' is not a valid word.")
+    elif isinstance(word, (list, tuple)):
+        for w in word:
+            if isinstance(w, str) and w.isalpha():
+                wordlist.append(w.lower())
+            else:
+                raise ValueError(f"Invalid input: '{word}' is not a valid word.")
+    else:
+        raise TypeError("Invalid input type. Please provide a string, list, or tuple of alphabetic words.")
 
 def remove_from_wordlist(word):
-    if word not in wordlist:
-        raise ValueError(f"\"{word}\" not in wordlist!")
-    wordlist.remove(word)
+    if isinstance(word, str):
+        if word.isalpha():
+            if word in wordlist:
+                wordlist.remove(word)
+            else:
+                raise ValueError(f"\"{word}\" not in wordlist!")
+        else:
+            raise ValueError(f"Invalid input: '{word}' is not a valid word.")
+    elif isinstance(word, (list, tuple)):
+        for w in word:
+            if isinstance(w, str) and w.isalpha():
+                if w in wordlist:
+                    wordlist.remove(w)
+                else:
+                    raise ValueError(f"\"{w}\" not in wordlist!")
+            else:
+                raise ValueError(f"Invalid input: '{word}' is not a valid word.")
+    else:
+        raise TypeError("Invalid input type. Please provide a string, list, or tuple of alphabetic words.")
+
+
+def stack(source, destination):
+    try:
+        with open(source, "r") as f:
+            source_words = f.read().split("\n")
+        with open(destination, "r") as f:
+            destination_words = f.read().split("\n")
+
+        if any(len(word.split()) > 1 for word in source_words):
+            raise ValueError("Invalid source file format. Each word must be on a separate line.")
+        if any(len(word.split()) > 1 for word in destination_words):
+            raise ValueError("Invalid destination file format. Each word must be on a separate line.")
+
+        if not all(word.isalpha() for word in source_words):
+            raise ValueError("Invalid source file format. Words must contain only alphabetic characters.")
+        if not all(word.isalpha() for word in destination_words):
+            raise ValueError("Invalid destination file format. Words must contain only alphabetic characters.")
+
+        destination_words.extend(source_words)
+
+        with open(destination, "w") as f:
+            f.write("\n".join(destination_words))
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"File not found: {str(e)}")
+    except Exception as e:
+        raise ValueError(f"Error during stacking: {str(e)}")
+
+def merge_delete(source, destination):
+    try:
+        with open(source, "r") as f:
+            source_words = f.read().split("\n")
+        with open(destination, "r") as f:
+            destination_words = f.read().split("\n")
+
+        if any(len(word.split()) > 1 for word in source_words):
+            raise ValueError("Invalid source file format. Each word must be on a separate line.")
+        if any(len(word.split()) > 1 for word in destination_words):
+            raise ValueError("Invalid destination file format. Each word must be on a separate line.")
+
+        if not all(word.isalpha() for word in source_words):
+            raise ValueError("Invalid source file format. Words must contain only alphabetic characters.")
+        if not all(word.isalpha() for word in destination_words):
+            raise ValueError("Invalid destination file format. Words must contain only alphabetic characters.")
+
+        destination_words_ = list(set(destination_words) - set(source_words))
+
+        # All other words in the source file that are not in the destination file will be added to the destination file
+
+        destination_words_ += [word for word in source_words if word not in destination_words]
+
+        with open(destination, "w") as f:
+            f.write("\n".join(destination_words_))
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"File not found: {str(e)}")
+    except Exception as e:
+        raise ValueError(f"Error during merge delete: {str(e)}")

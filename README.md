@@ -6,7 +6,7 @@
 ---
 
 <div align="center">
-<img src="https://img.shields.io/badge/Version-0.3.0-gold.svg" alt="version">
+<img src="https://img.shields.io/badge/Version-0.3.5-gold.svg" alt="version">
 <img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg" alt="license">
 <img src="https://img.shields.io/badge/Python-3.2+-green.svg" alt="python">
 <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg" alt="platform">
@@ -102,7 +102,7 @@ In the code above, we're getting similar words to `apgle` with a similarity rate
 
 A similarity rate of `0.5` means that the words returned will be at least 50% similar to the word we're checking. The higher the similarity rate, the more precise the results will be, but generally there will be less words. Myself I would recommend to keep the similarity rate at `0.5`, but you can experiment with it and see what works best for you.
 
-The `chunks` argument specifies how many chunks the wordlist will be split into. This is useful if you have a large wordlist and you want to speed up the process. The higher the number, the faster the process will be, but the more memory/CPU it will consume. For example, when trying to scan `wordlist.txt` with 500 chunks, the process takes about 0.5 seconds on my machine, but it consumes about 1.5 GB of RAM and 44% of one of the CPU cores. If you have a large wordlist.
+The `chunks` argument specifies how many chunks the wordlist will be split into. This is useful if you have a large wordlist and you want to speed up the process. The higher the number, the faster the process will be, but the more memory/CPU it will consume. For example, when trying to scan `wordlist.txt` with 1500 chunks, the process takes about 0.5 seconds on my machine, but it consumes about 1.5 GB of RAM and 44% of one of the CPU cores. If you have a large wordlist.
 
 The `upto` argument specifies how many similar words will be returned. If you set it to `3`, then the function will return up to 3 similar words. If you set it to `1`, then it will return up to 1 similar word. But, whatever amount you select, the output will still be a list. If you set it to `0`, then the function will raise a `ValueError`.
 
@@ -159,6 +159,16 @@ if not is_correct("reactjs") and get_similar("reactjs") is None:
         pass
 ```
 
+You can also extend the wordlist with multiple words at once by passing a list or a tuple to the function. Like this:
+
+```python
+from lesp import extend_wordlist
+
+words = ["reactjs", "vuejs", "angularjs"]
+
+extend_wordlist(words)
+```
+
 ### Remove from wordlist
 
 An opposite of the `extend_wordlist` function, this function removes a word from the wordlist. Note that this function will raise a `ValueError` if the word is not in the wordlist. Also note that this function will not remove the word from the wordlist permanently, it will only remove it for the current session. Here's an example:
@@ -168,6 +178,62 @@ from lesp import remove_from_wordlist
 
 word = "reactjs"
 remove_from_wordlist(word)
+```
+
+If you want to remove multiple words at once, you can pass a list or a tuple to the function. Like this:
+
+```python
+from lesp import remove_from_wordlist
+
+words = ["reactjs", "vuejs", "angularjs"]
+
+remove_from_wordlist(words)
+```
+
+### Stacking
+
+This function lets you stack two wordlist files together, so you can have a bigger wordlist out of two combined. The function will take two arguments, the source file and the destination file. The source file is the file that will be stacked on top of the destination file. Here's an example:
+
+```python
+from lesp import stack
+
+stack("wordlist.txt", "my_wordlist.txt")
+```
+
+### Merge delete
+
+This function lets you delete all words from the destination file that are in the source file. For example, if you have a wordlist with the following words:
+
+```
+apple
+banana
+orange
+```
+
+And you have another wordlist with the following words:
+
+```
+apple
+banana
+raspberry
+```
+
+Then, if you use the `merge_delete` function, the destination file will be modified to look like this:
+
+```
+orange
+raspberry
+```
+
+Here's an example of how you can use it:
+
+```python
+from lesp import merge_delete
+
+merge_delete("wordlist.txt", "my_wordlist.txt")
+
+with open("my_wordlist.txt", "r") as f:
+    print(f.read())
 ```
 
 ## Examples 📝
@@ -219,7 +285,6 @@ You can contact me on Discord either in my [Discord Server](https://discord.gg/X
 - [ ] Optimize even further
 - [ ] Add more examples
 - [ ] Improve documentation
-- [ ] Add support for compounds
 
 ## License 📜
 
@@ -236,4 +301,6 @@ Many thanks to the following Open-Source projects:
 
 Thanks to these awesome people for contributing! I appreciate your support a lot! ❤️
 
-![Contributors](https://contrib.rocks/image?repo=LyubomirT/lesp)
+[![Contributors](https://contrib.rocks/image?repo=lyubomirt/lesp)](https://github.com/lyubomirt/lesp/graphs/contributors)
+
+(Note that due to a glitch, some contributors may not appear in the grid)
