@@ -18,7 +18,7 @@ except FileNotFoundError as error:
 showallsimilarities = config.split("showallsimilarities=\"")[1].split("\"")[0]
 
 def demo():
-    wordlist_path = "small_wordlist.txt"  # Update with the actual path to your small_wordlist.txt
+    wordlist_path = "small_wordlist.txt"  # Update with the actual path to your wordlist. Or use the pre-installed small wordlist.
     proofreader = Proofreader(wordlist_path)
 
     while True:
