@@ -346,12 +346,6 @@ Once again, thank you for your support!
 
 You can contact me on Discord either in my [Discord Server](https://discord.gg/XkjPDcSfNz) or in my DMs (@lyubomirt). Creating a discussion might also work, but I'm a bit faster to respond on Discord.
 
-## Future plans 📅
-
-- [ ] Optimize even further
-- [x] Add more examples
-- [x] Improve documentation
-
 ## License 📜
 
 This project is licensed under the BSD 3-Clause License. For more information, please refer to the `LICENSE` file.
