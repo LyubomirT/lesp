@@ -27,7 +27,7 @@ def demo():
             print("Correct!")
         else:
             print("Incorrect!")
-            similar = proofreader.get_similar(word, 0.5, chunks=20, upto=5)
+            similar = proofreader.get_similar(word, 0.5, chunks=20, upto=5, set_cache=True, use_cache=True)
             if similar is None:
                 print("No similar words found.")
             elif showallsimilarities == "True":
