@@ -261,6 +261,43 @@ with open("my_wordlist.txt", "r") as f:
     print(f.read())
 ```
 
+### Caching
+
+To improve the perfomance of LESP, `get_similar` uses a cache file to store similar words. This way, if you check the same word multiple times, it will be much faster. The default cache file is `lesp_cache/lesp.cache`, but you can change it by specifying the `cache_file` argument when initializing the `Proofreader` class. Here's an example:
+
+```python
+from lesp.autocorrect import Proofreader
+
+proofreader = Proofreader(wordlist="my_wordlist.txt", cache_file="my_cache.cache")
+```
+
+Cache works only for mistakes that have been made at least once. For example, if you check the word `apgle` and it returns `apple`, then the next time you check `apgle`, it will be much faster. This can save a lot of time and resources, especially if the user makes a lot of mistakes.
+
+If you want to clear the cache, you can use the `clear_cache` function. Here's an example:
+
+```python
+from lesp.autocorrect import Proofreader
+
+proofreader = Proofreader(wordlist="my_wordlist.txt", cache_file="my_cache.cache")
+
+proofreader.clear_cache()
+```
+
+This will delete the cache file and clear the cache variable in the current session. Note that the file will be deleted permanently, so make sure you have a backup if you want to keep it.
+
+To use the cache, you need to specify the `use_cache` (or `set_cache` if you want it to be modified) argument when calling the `get_similar` function. Here's an example:
+
+```python
+from lesp.autocorrect import Proofreader
+
+proofreader = Proofreader(wordlist="my_wordlist.txt", cache_file="my_cache.cache")
+
+similar_words = proofreader.get_similar("apgle", similarity_rate=0.5, chunks=4, upto=3, use_cache=True, set_cache=True) # Takes about 0.18 seconds on my machine
+similar_words2 = proofreader.get_similar("apgle", similarity_rate=0.5, chunks=4, upto=3, use_cache=True, set_cache=True) # Works almost instantly thanks to cache
+```
+
+Here, `use_cache` is responsible for using the loaded cache file (if it exists) and `set_cache` helps you to add a new mistake to cache. If you set `set_cache` to `True`, then the function will add the mistake to cache, so the next time you check the same word, it will be much faster with `use_cache` enabled.
+
 ## Examples 📝
 
 If you're still not sure where to use LESP, you can check out the `examples` folder. It contains some examples of how you can use LESP in your projects. These examples are pretty simple, but they should give you an idea of how you can use LESP in your projects.
