@@ -8,7 +8,7 @@
 <div align="center">
 <img src="https://img.shields.io/badge/Version-0.3.5-gold.svg" alt="version">
 <img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg" alt="license">
-<img src="https://img.shields.io/badge/Python-3.2+-green.svg" alt="python">
+<img src="https://img.shields.io/badge/Python-3.6+-green.svg" alt="python">
 <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg" alt="platform">
 <!-- No dependencies -->
 <img src="https://img.shields.io/badge/Dependencies-none-red.svg" alt="dependencies">
@@ -29,7 +29,7 @@ LESP is a lightweight, efficient spelling proofreader written in Python. It's de
 
 ## Installation 📥
 
-Simply clone the repository and run the `demo.py` file to check it out. You don't need to install any additional libraries, so this is like plug-and-play. Just note that anything below Python 3.2 won't run this since old versions don't support `concurrent.futures`, which is used to speed up the process.
+Simply clone the repository and run the `demo.py` file to check it out. You don't need to install any additional libraries, so this is like plug-and-play. Just note that anything below Python 3.6 won't run this since old versions don't support `concurrent.futures`, which is used to speed up the process.
 
 PyPi package coming soon, so stay tuned for a more convenient way to install LESP!
 
