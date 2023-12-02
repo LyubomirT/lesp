@@ -3,7 +3,45 @@ import concurrent.futures
 import os
 import json
 
+"""
+LESP helps you to detect and correct spelling mistakes in your text. It is a Python library that uses the Levenshtein distance algorithm to find similar words in a wordlist. Overall it works quickly and does not require a lot of resources.
+"""
+
 class Proofreader:
+    """
+    Proofreader - The main component of LESP. Contains most of the functions and methods of the library.
+
+    Args:
+        wordlist_path (str): Path to the wordlist file. Defaults to "lesp-wordlist.txt".
+        cache_file (str): Path to the cache file. Defaults to "lesp_cache/lesp.cache".
+    
+    Attributes:
+        wordlist_path (str): Path to the wordlist file.
+        wordlist (List[str]): List of words in the wordlist.
+        cache_file (str): Path to the cache file.
+        cache (dict): Dictionary containing the cache data.
+    
+    Raises:
+        FileNotFoundError: If the wordlist file or cache file is not found.
+        ValueError: If the wordlist file is not in the correct format.
+        ValueError: If the cache file is not in the correct format.
+        json.JSONDecodeError: If the cache file is not a valid JSON file.
+    
+    Methods:
+        load_wordlist: Loads the wordlist file.
+        load_cache: Loads the cache file.
+        save_cache: Saves the cache file.
+        get_similarity_score: Calculates the similarity score between two words.
+        get_similar: Returns a list of similar words.
+        is_correct: Checks if a word is correct.
+        backup: Backs up the wordlist file.
+        restore: Restores the wordlist file from a backup.
+        extend_wordlist: Adds a word or a list of words to the wordlist.
+        remove_from_wordlist: Removes a word or a list of words from the wordlist.
+        stack: Stacks two wordlist files.
+        merge_delete: Merges two wordlist files and deletes the words in the first file from the second file.
+        clear_cache: Clears the cache file.
+    """
     def __init__(self, wordlist_path: str = "lesp-wordlist.txt", cache_file: str = "lesp_cache/lesp.cache") -> None:
         self.wordlist_path: str = wordlist_path
         self.load_wordlist()
@@ -13,6 +51,22 @@ class Proofreader:
             self.load_cache(cache_file)
 
     def load_wordlist(self) -> None:
+        """
+        Loads a wordlist, also can be used to dynamically switch between wordlists. The wordlist path is based on the wordlist_path attribute of the Proofreader object.
+
+        Args:
+            None
+        
+        Returns:
+            None
+        
+        Raises:
+            FileNotFoundError: If the wordlist file is not found.
+            ValueError: If the wordlist file is not in the correct format.
+        
+        Requires:
+            The wordlist file must be in the correct format. Each word must be on a separate line. Words must contain only alphabetic characters.
+        """
         try:
             with open(self.wordlist_path, "r") as f:
                 self.wordlist: List[str] = f.read().strip().split("\n")
@@ -26,6 +80,20 @@ class Proofreader:
             raise FileNotFoundError(f"{self.wordlist_path} not found!")
     
     def load_cache(self, cache_file: str = "lesp.cache") -> None:
+        """
+        Loads the cache file. The cache file path is provided to the method as an argument.
+
+        Args:
+            cache_file (str): Path to the cache file.
+        
+        Returns:
+            None
+        
+        Raises:
+            FileNotFoundError: If the cache file is not found.
+            ValueError: If the cache file is not in the correct format.
+            json.JSONDecodeError: If the cache file is not a valid JSON file.
+        """
         try:
             with open(cache_file, "r") as f:
                 # Validate cache file format and how words are stored
@@ -47,6 +115,18 @@ class Proofreader:
             raise ValueError("Invalid cache file format. Must be a valid JSON file.")
         
     def save_cache(self) -> None:
+        """
+        Saves the cache file. The cache file path is specified in the Proofreader object.
+
+        Args:
+            None
+        
+        Returns:
+            None
+        
+        Raises:
+            FileNotFoundError: If the cache file is not found.
+        """
         try:
             with open(self.cache_file, "w") as f:
                 json.dump(self.cache, f)
@@ -55,6 +135,22 @@ class Proofreader:
 
     @staticmethod
     def get_similarity_score(word1: str, word2: str) -> float:
+        """
+        Calculates the similarity score between two words using the Levenshtein distance algorithm.
+
+        Args:
+            word1 (str): First word.
+            word2 (str): Second word.
+        
+        Returns:
+            float: Similarity score between the two words.
+        
+        Raises:
+            None
+        
+        Requires:
+            The two words must be strings.
+        """
         len1: int = len(word1)
         len2: int = len(word2)
         matrix: List[List[int]] = [[0 for j in range(len2 + 1)] for i in range(len1 + 1)]
@@ -74,6 +170,23 @@ class Proofreader:
 
     @staticmethod
     def get_similar_worker(args: tuple) -> List[str]:
+        """
+        WARNING: DO NOT USE THIS METHOD DIRECTLY. USE THE get_similar METHOD INSTEAD.
+
+        Args:
+            args (tuple): Tuple containing the word, similarity rate, and the wordlist chunk.
+        
+        Returns:
+            List[str]: List of similar words.
+        
+        Raises:
+            None
+        
+        Requires:
+            The word must be a string.
+            The similarity rate must be a float between 0 and 1.
+            The wordlist chunk must be a list of strings.
+        """
         word: str
         similarity_rate: float
         wordlist_chunk: List[str]
@@ -86,9 +199,49 @@ class Proofreader:
         return similar_words
 
     def is_correct(self, word: str) -> bool:
+        """
+        Checks if a word is correct.
+
+        Args:
+            word (str): Word to check.
+        
+        Returns:
+            bool: True if the word is correct, False otherwise.
+        
+        Raises:
+            None
+        
+        Requires:
+            The word must be a string.
+        """
         return word.lower() in self.wordlist
 
     def get_similar(self, word: str, similarity_rate: float, chunks: int = 4, upto: int = 3, use_cache: bool = False, set_cache: bool = False):
+        """
+        Returns a list of similar words, if any. If no similar words are found, returns None.
+
+        Args:
+            word (str): Word to check.
+            similarity_rate (float): Similarity rate between 0 and 1.
+            chunks (int): Number of chunks to split the wordlist into. Defaults to 4.
+            upto (int): Number of similar words to return. Defaults to 3.
+            use_cache (bool): Whether to use the cache file. Defaults to False.
+            set_cache (bool): Whether to set the cache file. Defaults to False.
+        
+        Returns:
+            List[str]: List of similar words.
+            or None if no similar words are found.
+        
+        Raises:
+            ValueError: If upto is less than 1.
+            ValueError: If chunks is less than 1.
+            ValueError: If similarity_rate is not between 0 and 1.
+        
+        Requires:
+            The word must be a string.
+            The similarity rate must be a float between 0 and 1.
+            The wordlist chunk must be a list of strings.
+        """
         if upto < 1:
             raise ValueError("Can only return 1 or more similar words.")
         if chunks < 1:
@@ -129,12 +282,41 @@ class Proofreader:
             return similar_words[:upto]
 
     def backup(self, path: str = "wordlist_backup") -> None:
+        """
+        Backs up the wordlist file.
+
+        Args:
+            path (str): Path to the backup file.
+        
+        Returns:
+            None
+        
+        Raises:
+            ValueError: If the path specified is a directory.
+        """
         if os.path.isdir(path):
             raise ValueError("Path specified is a directory!")
         with open(path, "w") as f:
             f.write("\n".join(self.wordlist))
 
     def restore(self, overwrite_current: bool, path: str = "wordlist_backup") -> None:
+        """
+        Restores the wordlist file from a backup.
+
+        Args:
+            overwrite_current (bool): Whether to overwrite the current wordlist file.
+            path (str): Path to the backup file.
+        
+        Returns:
+            None
+
+        Raises:
+            FileNotFoundError: If the backup file is not found.
+            ValueError: If the backup file is not in the correct format.
+        
+        Requires:
+            The backup file must be in the correct format. Each word must be on a separate line. Words must contain only alphabetic characters.
+        """
         try:
             if not os.path.isfile(path):
                 raise FileNotFoundError("Backup file not found!")
@@ -154,6 +336,23 @@ class Proofreader:
             raise ValueError(f"Error during restore: {str(e)}")
 
     def extend_wordlist(self, word: Union[str, List[str], tuple]) -> None:
+        """
+        Adds a word or a list of words to the wordlist.
+
+        Args:
+            word (Union[str, List[str], tuple]): Word or list of words to add to the wordlist.
+        
+        Returns:
+            None
+        
+        Raises:
+            TypeError: If the input type is not a string, list, or tuple.
+            ValueError: If the input is not a valid word.
+        
+        Requires:
+            Each word must be a string.
+            Each word must be alphabetic.
+        """
         if isinstance(word, str):
             if word.isalpha():
                 self.wordlist.append(word.lower())
@@ -169,6 +368,23 @@ class Proofreader:
             raise TypeError("Invalid input type. Please provide a string, list, or tuple of alphabetic words.")
 
     def remove_from_wordlist(self, word: Union[str, List[str], tuple]) -> None:
+        """
+        Removes a word or a list of words from the wordlist.
+
+        Args:
+            word (Union[str, List[str], tuple]): Word or list of words to remove from the wordlist.
+        
+        Returns:
+            None
+        
+        Raises:
+            TypeError: If the input type is not a string, list, or tuple.
+            ValueError: If the input is not a valid word.
+        
+        Requires:
+            Each word must be a string.
+            Each word must be alphabetic.
+        """
         if isinstance(word, str):
             if word.isalpha():
                 if word in self.wordlist:
@@ -191,6 +407,25 @@ class Proofreader:
 
     @staticmethod
     def stack(source: str, destination: str) -> None:
+        """
+        Stacks two wordlist files. The source file is stacked on top of the destination file.
+
+        Args:
+            source (str): Path to the source file.
+            destination (str): Path to the destination file.
+        
+        Returns:
+            None
+        
+        Raises:
+            FileNotFoundError: If the source file or destination file is not found.
+            ValueError: If the source file is not in the correct format.
+            ValueError: If the destination file is not in the correct format.
+        
+        Requires:
+            The source file must be in the correct format. Each word must be on a separate line. Words must contain only alphabetic characters.
+            The destination file must be in the correct format. Each word must be on a separate line. Words must contain only alphabetic characters.
+        """
         try:
             with open(source, "r") as f:
                 source_words: List[str] = f.read().split("\n")
@@ -218,6 +453,25 @@ class Proofreader:
 
     @staticmethod
     def merge_delete(source: str, destination: str) -> None:
+        """
+        Merges two wordlist files and deletes the words in the first file from the second file.
+
+        Args:
+            source (str): Path to the source file.
+            destination (str): Path to the destination file.
+        
+        Returns:
+            None
+        
+        Raises:
+            FileNotFoundError: If the source file or destination file is not found.
+            ValueError: If the source file is not in the correct format.
+            ValueError: If the destination file is not in the correct format.
+        
+        Requires:
+            The source file must be in the correct format. Each word must be on a separate line. Words must contain only alphabetic characters.
+            The destination file must be in the correct format. Each word must be on a separate line. Words must contain only alphabetic characters.
+        """
         try:
             with open(source, "r") as f:
                 source_words: List[str] = f.read().split("\n")
@@ -248,6 +502,22 @@ class Proofreader:
             raise ValueError(f"Error during merge delete: {str(e)}")
     
     def clear_cache(self, cache_file: str = "lesp_cache/lesp.cache") -> None:
+        """
+        Clears the cache file.
+
+        Args:
+            cache_file (str): Path to the cache file.
+        
+        Returns:
+            None
+
+        Raises:
+            FileNotFoundError: If the cache file is not found.
+            ValueError: If the cache file is not specified.
+        
+        Requires:
+            The cache file must be in the correct format. Each word must be on a separate line. Words must contain only alphabetic characters.
+        """
         if cache_file:
             try:
                 os.remove(cache_file)
