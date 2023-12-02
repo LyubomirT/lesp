@@ -31,9 +31,13 @@ LESP is a lightweight, efficient spelling proofreader written in Python. It's de
 
 Simply clone the repository and run the `demo.py` file to check it out. You don't need to install any additional libraries, so this is like plug-and-play. Just note that anything below Python 3.6 won't run this since old versions don't support `concurrent.futures`, which is used to speed up the process.
 
-PyPi package coming soon, so stay tuned for a more convenient way to install LESP!
+## ...or install it with `pip` 📥
 
-### Detailed installation instructions
+```bash
+pip install lesp
+```
+
+### Detailed installation instructions for Git
 
 1. Clone the repository
 
@@ -55,7 +59,7 @@ python demo.py
 
 ## Usage 📖
 
-LESP is pretty easy to setup, and basic demo configuration is already pre-built. You can find it in `demo_config` (this is a file, not a folder!) and you can edit it to your liking. Note that the file is **required** for the demo to run, so don't delete, move, or rename it. Not required for installing it with `pip` though (coming soon).
+LESP is pretty easy to setup, and basic demo configuration is already pre-built. You can find it in `demo_config` (this is a file, not a folder!) and you can edit it to your liking. Note that the file is **required** for the demo to run, so don't delete, move, or rename it. Not required for installing it with `pip` though.
 
 If you want to take a closer look at how to use LESP, you can check out our [documentation](https://lesp.gitbook.io/lesp). There we have a detailed explanation of how to use LESP, along with some examples. If you're still not sure how to use LESP, you can check out the `examples` folder. It contains some examples of how you can use LESP in your projects. These examples are pretty simple, but they should give you an idea of how you can use LESP in your projects.
 
