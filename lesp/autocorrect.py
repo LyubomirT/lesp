@@ -1,11 +1,10 @@
+"""
+LESP helps you to detect and correct spelling mistakes in your text. It is a Python library that uses the Levenshtein distance algorithm to find similar words in a wordlist. Overall it works quickly and does not require a lot of resources.
+"""
 from typing import List, Optional, Union
 import concurrent.futures
 import os
 import json
-
-"""
-LESP helps you to detect and correct spelling mistakes in your text. It is a Python library that uses the Levenshtein distance algorithm to find similar words in a wordlist. Overall it works quickly and does not require a lot of resources.
-"""
 
 class Proofreader:
     """
