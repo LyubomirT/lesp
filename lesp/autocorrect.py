@@ -88,7 +88,7 @@ class Proofreader:
     def is_correct(self, word: str) -> bool:
         return word.lower() in self.wordlist
 
-    def get_similar(self, word: str, similarity_rate: float, chunks: int = 4, upto: int = 3, use_cache: bool = False, set_cache: bool = False) -> Optional[List[str]]:
+    def get_similar(self, word: str, similarity_rate: float, chunks: int = 4, upto: int = 3, use_cache: bool = False, set_cache: bool = False):
         if upto < 1:
             raise ValueError("Can only return 1 or more similar words.")
         if chunks < 1:
