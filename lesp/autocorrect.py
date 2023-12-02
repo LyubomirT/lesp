@@ -46,6 +46,7 @@ class Proofreader:
         self.load_wordlist()
         self.cache_file: str = cache_file
         self.cache: dict = {}
+        self.wordlist: List[str] = []
         if cache_file:
             self.load_cache(cache_file)
 
@@ -325,6 +326,15 @@ class Proofreader:
 
             if not all(word.isalpha() for word in wordlist_):
                 raise ValueError("Invalid backup file format. Words must contain only alphabetic characters.")
+        
+            # Same validation as load_wordlist but optimized for this method
+            wordlist_ = list(set(wordlist_))
+
+            # Remove leading and trailing whitespaces from each word
+            wordlist_ = [word.strip() for word in wordlist_]
+
+            if not all(word.isalpha() for word in wordlist_ and not all(word.islower() for word in wordlist_)):
+                raise ValueError("Invalid backup file format. Words must be all-lowercase and contain only alphabetic characters.")
 
             self.wordlist = wordlist_
 
@@ -430,6 +440,20 @@ class Proofreader:
                 source_words: List[str] = f.read().split("\n")
             with open(destination, "r") as f:
                 destination_words: List[str] = f.read().split("\n")
+            
+            # Same validation as load_wordlist but optimized for this method
+            source_words = list(set(source_words))
+            destination_words = list(set(destination_words))
+
+            # Remove leading and trailing whitespaces from each word
+            source_words = [word.strip() for word in source_words]
+            destination_words = [word.strip() for word in destination_words]
+
+            if not all(word.isalpha() for word in source_words and not all(word.islower() for word in source_words)):
+                raise ValueError("Invalid source file format. Words must be all-lowercase and contain only alphabetic characters.")
+
+            if not all(word.isalpha() for word in destination_words and not all(word.islower() for word in destination_words)):
+                raise ValueError("Invalid destination file format. Words must be all-lowercase and contain only alphabetic characters.")
 
             if any(len(word.split()) > 1 for word in source_words):
                 raise ValueError("Invalid source file format. Each word must be on a separate line.")
@@ -486,6 +510,24 @@ class Proofreader:
                 raise ValueError("Invalid source file format. Words must contain only alphabetic characters.")
             if not all(word.isalpha() for word in destination_words):
                 raise ValueError("Invalid destination file format. Words must contain only alphabetic characters.")
+            
+            # Same validation as load_wordlist but optimized for this method
+
+            # Remove leading and trailing whitespaces from each word
+            source_words = [word.strip() for word in source_words]
+
+            # Remove leading and trailing whitespaces from each word
+            destination_words = [word.strip() for word in destination_words]
+
+            source_words = list(set(source_words))
+            destination_words = list(set(destination_words))
+
+            if not all(word.isalpha() for word in source_words and not all(word.islower() for word in source_words)):
+                raise ValueError("Invalid source file format. Words must be all-lowercase and contain only alphabetic characters.")
+
+            if not all(word.isalpha() for word in destination_words and not all(word.islower() for word in destination_words)):
+                raise ValueError("Invalid destination file format. Words must be all-lowercase and contain only alphabetic characters.")
+            
 
             destination_words_ = list(set(destination_words) - set(source_words))
 
