@@ -57,6 +57,8 @@ python demo.py
 
 LESP is pretty easy to setup, and basic demo configuration is already pre-built. You can find it in `demo_config` (this is a file, not a folder!) and you can edit it to your liking. Note that the file is **required** for the demo to run, so don't delete, move, or rename it. Not required for installing it with `pip` though (coming soon).
 
+If you want to take a closer look at how to use LESP, you can check out our [documentation](https://lesp.gitbook.io/lesp). There we have a detailed explanation of how to use LESP, along with some examples. If you're still not sure how to use LESP, you can check out the `examples` folder. It contains some examples of how you can use LESP in your projects. These examples are pretty simple, but they should give you an idea of how you can use LESP in your projects.
+
 ### Basic usage
 
 To use LESP, you need to import the `Proofreader` class from the `lesp` module. The class has a decent amount of functions, but the most important ones are `is_correct` and `get_similar`. Here's an example:
