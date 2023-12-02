@@ -6,7 +6,7 @@
 ---
 
 <div align="center">
-<img src="https://img.shields.io/badge/Version-0.3.5-gold.svg" alt="version">
+<img src="https://img.shields.io/badge/Version-1.0.0-gold.svg" alt="version">
 <img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg" alt="license">
 <img src="https://img.shields.io/badge/Python-3.6+-green.svg" alt="python">
 <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg" alt="platform">

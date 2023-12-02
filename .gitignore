@@ -1,2 +1,6 @@
 __pycache__/
 temp/
+PYPI.md
+pypi/
+pyproject.toml
+dist/
