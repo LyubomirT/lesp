@@ -1,7 +1,7 @@
 [project]
 name = "lesp"
 description = "LESP is a lightweight, efficient spelling proofreader written in Python. It's designed to be easy to use and lightweight, while still providing a decent result when checking for spelling errors. Resource consumption is kept to a minimum, and the program is designed to be as fast as possible."
-version = "1.0.4"
+version = "1.1.0"
 readme = "PYPI.md"
 authors = [
     { name = "Lyubomir Ternavskiy", email = "ternavski103@gmail.com" }

@@ -579,4 +579,26 @@ class Proofreader:
         else:
             raise ValueError("Cache file not specified!")
     
+    def remove_special(self, word: str) -> str:
+        """
+        Removes special characters from a word.
+
+        Args:
+            word (str): Word to remove special characters from.
+        
+        Returns:
+            str: Word without special characters.
+        
+        Raises:
+            None
+        
+        Requires:
+            The word must be a string.
+        """
+        special_chars: str = "!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
+        for char in special_chars:
+            word = word.replace(char, "")
+        
+        return word
+    
 

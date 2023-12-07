@@ -304,6 +304,22 @@ similar_words2 = proofreader.get_similar("apgle", similarity_rate=0.5, chunks=4,
 
 Here, `use_cache` is responsible for using the loaded cache file (if it exists) and `set_cache` helps you to add a new mistake to cache. If you set `set_cache` to `True`, then the function will add the mistake to cache, so the next time you check the same word, it will be much faster with `use_cache` enabled.
 
+### Removing Special Characters
+
+Sometimes, a string may contain special characters, such as `!`, `?`, `@`, etc. These characters can be removed using the `remove_special` method. It covers most of the special characters out there, but not all of them. So if you find a special character that is not covered, please open an issue and I'll add it. Here's an example:
+
+```python
+from lesp.autocorrect import Proofreader
+
+proofreader = Proofreader(wordlist="my_wordlist.txt")
+
+word = "apgle!"
+word = proofreader.remove_special(word) # apgle
+
+if not proofreader.is_correct(word): # Not correct, of course
+    print("Did you mean: " + proofreader.get_similar(word)) # Did you mean: apple
+```
+
 ## Examples 📝
 
 If you're still not sure where to use LESP, you can check out the `examples` folder. It contains some examples of how you can use LESP in your projects. These examples are pretty simple, but they should give you an idea of how you can use LESP in your projects.
