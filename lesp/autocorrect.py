@@ -43,12 +43,13 @@ class Proofreader:
     """
     def __init__(self, wordlist_path: str = "lesp-wordlist.txt", cache_file: str = "lesp_cache/lesp.cache") -> None:
         self.wordlist_path: str = wordlist_path
+        self.wordlist: List[str] = []  # Initialize as an empty list
         self.load_wordlist()
         self.cache_file: str = cache_file
         self.cache: dict = {}
-        self.wordlist: List[str] = []
         if cache_file:
             self.load_cache(cache_file)
+
 
     def load_wordlist(self) -> None:
         """
@@ -251,7 +252,9 @@ class Proofreader:
 
         word = word.lower()
         similar_words: List[str] = []
-        chunk_size: int = len(self.wordlist) // chunks
+        chunk_size = len(self.wordlist) // chunks
+
+        chunks = [(word, similarity_rate, self.wordlist[i:i + chunk_size]) for i in range(0, len(self.wordlist), chunk_size)]
 
         if use_cache and self.cache and self.cache_file and word in self.cache:
             if self.cache[word] != []:
@@ -259,10 +262,9 @@ class Proofreader:
             else:
                 return None
 
-        chunks: List[tuple] = [(word, similarity_rate, self.wordlist[i:i + chunk_size]) for i in range(0, len(self.wordlist), chunk_size)]
-
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results: List[List[str]] = list(executor.map(Proofreader.get_similar_worker, chunks))
+           results: List[List[str]] = list(executor.map(Proofreader.get_similar_worker, chunks))
+
 
         for similar_word_list in results:
             similar_words.extend(similar_word_list)
@@ -270,7 +272,6 @@ class Proofreader:
         similar_words = list(set(similar_words))
 
         if set_cache and self.cache_file and word not in self.cache:
-            print("Setting cache for \"" + word + "\"")
             self.cache[word] = similar_words
             self.save_cache()
 
