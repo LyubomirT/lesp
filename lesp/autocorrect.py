@@ -100,9 +100,15 @@ class Proofreader:
                 # Validate cache file format and how words are stored
                 temp_cache: dict = json.load(f)
                 # Must follow the format {"word": ["similar", "words"]}
-                if not all(isinstance(word, str) for word in temp_cache.keys() and not all(word.islower() and word.isalpha() for word in temp_cache.keys())):
-                    raise ValueError("Invalid cache file format. Keys must be strings. Also the strings must be all-lowercase and contain only alphabetic characters.")
-                self.cache: dict = json.load(f)
+                for word in temp_cache.keys():
+                    if not isinstance(word, str) or not word.islower() or not word.isalpha():
+                        raise ValueError("Invalid cache file format. Keys must be strings. Also, the strings must be all-lowercase and contain only alphabetic characters.")
+                    if not isinstance(temp_cache[word], list):
+                        raise ValueError("Invalid cache file format. Values must be lists.")
+                    if not all(isinstance(w, str) and w.islower() and w.isalpha() for w in temp_cache[word]):
+                        raise ValueError("Invalid cache file format. Values must be lists of strings. Also, the strings must be all-lowercase and contain only alphabetic characters.")
+                self.cache: dict = temp_cache  # Use the loaded data
+
         except FileNotFoundError:
             # Create the cache file (and directory. also possible if multiple directories are missing)
             try:
@@ -114,6 +120,7 @@ class Proofreader:
                     json.dump({}, f)
         except json.JSONDecodeError:
             raise ValueError("Invalid cache file format. Must be a valid JSON file.")
+
         
     def save_cache(self) -> None:
         """
