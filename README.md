@@ -70,7 +70,7 @@ To use LESP, you need to import the `Proofreader` class from the `lesp` module. 
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 clearlynotcorrect = proofreader.is_correct("apgle") # False
 
 if not clearlynotcorrect:
@@ -98,7 +98,7 @@ When finished with writing your wordlist, save it as a `.txt` file. Then, you ca
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 ```
 
 You can customize the process of getting similar words as well. Configuration will be provided as arguments to the `get_similar` function. Here's an example:
@@ -106,7 +106,7 @@ You can customize the process of getting similar words as well. Configuration wi
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 
 similar_words = proofreader.get_similar("apgle", similarity_rate=0.5, chunks=4, upto=3)
 
@@ -128,7 +128,7 @@ Even if this function isn't really supposed to be a feature, you can still use i
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 
 score = proofreader.get_similarity_score("apple", "apgle") # 0.8
 
@@ -144,7 +144,7 @@ If you're concerned about losing your wordlist, you can use the `backup` functio
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 
 proofreader.backup("my_wordlist_backup.txt") # Leave empty to use default path
 ```
@@ -156,7 +156,7 @@ If you've backed up your wordlist, you can restore it using the `restore` functi
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 
 proofreader.restore(True, "my_wordlist_backup.txt") # Leave empty to use default path
 ```
@@ -170,7 +170,7 @@ This is useful if the user usually writes about a specific, non-general topic. F
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 
 if not proofreader.is_correct("reactjs") and proofreader.get_similar("reactjs") is None:
     confirm = input("reactjs is not in the wordlist. Would you like to add it? (y/n) ")
@@ -187,7 +187,7 @@ You can also extend the wordlist with multiple words at once by passing a list o
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 
 words = ["reactjs", "vuejs", "angularjs"]
 
@@ -201,7 +201,7 @@ An opposite of the `extend_wordlist` function, this function removes a word from
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 
 word = "reactjs"
 proofreader.remove_from_wordlist(word)
@@ -212,7 +212,7 @@ If you want to remove multiple words at once, you can pass a list or a tuple to 
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 
 words = ["reactjs", "vuejs", "angularjs"]
 
@@ -259,7 +259,7 @@ Here's an example of how you can use it:
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 
 proofreader.merge_delete("wordlist.txt", "my_wordlist.txt")
 
@@ -274,7 +274,7 @@ To improve the perfomance of LESP, `get_similar` uses a cache file to store simi
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt", cache_file="my_cache.cache")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt", cache_file="my_cache.cache")
 ```
 
 Cache works only for mistakes that have been made at least once. For example, if you check the word `apgle` and it returns `apple`, then the next time you check `apgle`, it will be much faster. This can save a lot of time and resources, especially if the user makes a lot of mistakes.
@@ -284,7 +284,7 @@ If you want to clear the cache, you can use the `clear_cache` function. Here's a
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt", cache_file="my_cache.cache")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt", cache_file="my_cache.cache")
 
 proofreader.clear_cache()
 ```
@@ -296,7 +296,7 @@ To use the cache, you need to specify the `use_cache` (or `set_cache` if you wan
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt", cache_file="my_cache.cache")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt", cache_file="my_cache.cache")
 
 similar_words = proofreader.get_similar("apgle", similarity_rate=0.5, chunks=4, upto=3, use_cache=True, set_cache=True) # Takes about 0.18 seconds on my machine
 similar_words2 = proofreader.get_similar("apgle", similarity_rate=0.5, chunks=4, upto=3, use_cache=True, set_cache=True) # Works almost instantly thanks to cache
@@ -311,7 +311,7 @@ Sometimes, a string may contain special characters, such as `!`, `?`, `@`, etc. 
 ```python
 from lesp.autocorrect import Proofreader
 
-proofreader = Proofreader(wordlist="my_wordlist.txt")
+proofreader = Proofreader(wordlist_path="my_wordlist.txt")
 
 word = "apgle!"
 word = proofreader.remove_special(word) # apgle
